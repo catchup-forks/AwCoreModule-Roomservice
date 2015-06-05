@@ -1,0 +1,8 @@
+{
+    "slug": "roomservice",
+    "name": "Room Service",
+    "description": "Module for room service management",
+    "version": "1.0",
+    "order": 1,
+    "enabled": true
+}
