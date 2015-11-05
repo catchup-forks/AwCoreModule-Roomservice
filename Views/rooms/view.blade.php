@@ -83,23 +83,19 @@
 			</div>
 			<div class="box-content no-padding">
 				@if($roomBookings_active)
-					<table class="table table-striped table-condensed">
+					<table class="table table-striped table-condensed fixed">
 						<tr>
-							<th>ID</th>
 							<th>Status</th>
 							<th>Period</th>
 							<th>Guests</th>
 							<th>Notes</th>
-							<th>Edit</th>
 						</tr>
 						@foreach($roomBookings_active as $book)
 						<tr>
-							<td>{{$book['room_book_id']}}</td>
-							<td>{{$book['status_name']}}</td>
+							<td><a href="{{ URL::to('roombookings/edit/'.$book['room_book_id']) }}"><span class="fa fa-edit"></span></a> ID:{{$book['room_book_id']}} <br> {{$book['status_name']}}</td>
 							<td>In: {{$book['room_book_start']}}<br>Out: {{$book['room_book_end']}}</td>
 							<td>{{$book['room_book_name']}} x {{$book['room_book_ppl']}}<br>{{$book['room_book_email']}}</td>
 							<td>{{$book['room_book_notes']}}</td>
-							<td><a href="{{ URL::to('roombookings/edit/'.$book['room_book_id']) }}"><span class="fa fa-edit"></span></a></td>
 						</tr>
 						@endforeach
 					</table>
@@ -128,6 +124,9 @@
 				<a href="{{ URL::to('roomcharges/new/'.$room['room_id']) }}"><span class="fa fa-plus"></span>Add Charge</a>
 				@endif
 				<a href="{{ URL::to('rooms/exportcharges/'.$room['room_id']) }}" class="pull-right" target="_blank"><span class="fa fa-download"></span>Export</a>
+				@if(! Input::has("allcharge"))
+					Showing 10 <a href="{{ URL::to('rooms/view/'.$room['room_id'].'?allcharge=1') }}" class=""><span class="fa fa-search"></span> All Charges</a>
+				@endif
 				@if(is_array($roomCharges) && count($roomCharges) )
 					<table class="table table-striped table-condensed">
 						<tr>
@@ -172,6 +171,9 @@
 			<div class="box-content no-padding">
 				@if($is_admin)
 				<a href="{{ URL::to('roommeters/new/'.$room['room_id']) }}"><span class="fa fa-plus"></span>Add Meter Reading</a>
+				@endif
+				@if(! Input::has("allmeter"))
+					Showing 10 <a href="{{ URL::to('rooms/view/'.$room['room_id'].'?allmeter=1') }}" class=""><span class="fa fa-search"></span> All Readings</a>
 				@endif
 				@if(is_array($roomMeters) && count($roomMeters) )
 					<table class="table table-striped table-condensed">

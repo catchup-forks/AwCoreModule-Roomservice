@@ -61,7 +61,7 @@ class RoomserviceController extends BaseController
     		$checkouts = $this->roomBookings->setOrder("room_book_end", "asc")->take(20)
     		->join('rooms', 'rooms.room_id', '=', 'room_bookings.room_id')->setWhere("rooms.user_id", "=", Auth::user()->id)
     		->setWhere("room_book_status", ">=", 1)->getWhere("room_book_end", ">=", date("Y-m-d"));
-    		$latest = $this->roomBookings->setOrder("created_at", "desc")->take(20)
+    		$latest = $this->roomBookings->setOrder("room_bookings.created_at", "desc")->take(20)
     		->join('rooms', 'rooms.room_id', '=', 'room_bookings.room_id')->setWhere("rooms.user_id", "=", Auth::user()->id)
     		->getWhere("room_book_status", ">=", 0);
     		$balances = $this->rooms->getWhere("user_id", "=", Auth::user()->id);
@@ -77,9 +77,7 @@ class RoomserviceController extends BaseController
     public function getDashboardFooter($html){
     	return $html;
     }
-    public function getMenuMain($html){
-    	if(!(Auth::check() && Auth::user()->level)){$html = "";}
-    	
+    public function getMenuMain($html){ 	
     	return $html.'<li><a href="#" class="dropdown-toggle"><i class="fa fa-bed"></i><span class="hidden-xs">Rooms</span></a>
     		<ul class="dropdown-menu">
     			<li><a href="'.URL::to('rooms').'">View Rooms</span></a></li>'
@@ -88,7 +86,10 @@ class RoomserviceController extends BaseController
     	</li>';
     }
     public function getMenuSettings($html){
-    	if(!Auth::user()->level){return "";}
+    	if(!Auth::check()){return "";}
+    	if(!Auth::user()->level){
+    		return '<li><a href="'.URL::to('user/edit/'.Auth::user()->id).'"><i class="fa fa-users"></i>Profile</span></a></li>';
+    	}
     	return $html.'<li><a href="'.URL::to('metertypes').'"><i class="fa fa-meter"></i><span class="hidden-xs">Meter Types</span></a></li>';
     }
     public function userListView($arr, $users){

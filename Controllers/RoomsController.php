@@ -62,9 +62,18 @@ class RoomsController extends BaseController
 			->setOrder("room_book_start", "asc")->setWhere("room_book_start", ">", date("Y-m-d"))->getWhere("room_id", "=", $id);
 		$roomBookings_past = $this->roomBookings
 			->setOrder("room_book_start", "asc")->setWhere("room_book_end", "<", date("Y-m-d"))->getWhere("room_id", "=", $id);
-
-		$roomCharges = $this->roomCharges->getWhere("room_id", "=", $id);
-		$roomMeters = $this->roomMeters->getWhere("room_id", "=", $id);
+		
+		if(Input::has("allcharge")){
+			$roomCharges = $this->roomCharges->setOrder("created_at", "desc")->getWhere("room_id", "=", $id);
+		}else{
+			$roomCharges = $this->roomCharges->setOrder("created_at", "desc")->take(10)->getWhere("room_id", "=", $id);
+		}
+		if(Input::has("allmeter")){
+			$roomMeters = $this->roomMeters->setOrder("created_at", "desc")->getWhere("room_id", "=", $id);
+		}else{
+			$roomMeters = $this->roomMeters->setOrder("created_at", "desc")->take(10)->getWhere("room_id", "=", $id);
+		}
+		
 		$roomChat = $this->roomChat->setOrder("created_at", "desc")->getWhere("room_id", "=", $id);
 		
 		$this->doLayout("RoomserviceView::rooms.view")
